@@ -1,0 +1,6 @@
+# to install a container runtime
+- hosts:
+  - kube_master
+  - kube_node
+  roles:
+  - { role: runtime }
