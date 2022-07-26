@@ -1,0 +1,16 @@
+# [optional] to synchronize system time of nodes with 'chrony' 
+- hosts:
+  - kube_master
+  - kube_node
+  - chrony
+  roles:
+  - { role: os-harden, when: "OS_HARDEN|bool" }
+  - { role: chrony, when: "groups['chrony']|length > 0" }
+
+
+# prepare tasks for all nodes
+- hosts:
+  - kube_master
+  - kube_node
+  roles:
+  - prepare

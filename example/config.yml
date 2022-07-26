@@ -1,0 +1,107 @@
+############################
+# prepare
+############################
+# 可选离线安装系统软件包 (offline|online)
+INSTALL_SOURCE: "online"
+
+# 可选进行系统安全加固 github.com/dev-sec/ansible-collection-hardening
+OS_HARDEN: false
+
+# kubeconfig 配置参数
+CLUSTER_NAME: "cluster1"
+CONTEXT_NAME: "context-{{ CLUSTER_NAME }}"
+
+# ------------------------------------------- docker
+# [docker]容器存储目录
+DOCKER_STORAGE_DIR: "/var/lib/docker"
+
+# [docker]开启Restful API
+ENABLE_REMOTE_API: false
+
+# [docker]信任的HTTP仓库
+# INSECURE_REG: '["http://easzlab.io.local:5000"]'
+
+# 配置为kube组件（kubelet,kube-proxy,dockerd等）预留的资源量
+# 数值设置详见templates/kubelet-config.yaml.j2
+KUBE_RESERVED_ENABLED: "no"
+
+# k8s 官方不建议草率开启 system-reserved, 除非你基于长期监控，了解系统的资源占用状况；
+# 并且随着系统运行时间，需要适当增加资源预留，数值设置详见templates/kubelet-config.yaml.j2
+# 系统预留设置基于 4c/8g 虚机，最小化安装系统服务，如果使用高性能物理机可以适当增加预留
+# 另外，集群安装时候apiserver等资源占用会短时较大，建议至少预留1g内存
+SYS_RESERVED_ENABLED: "no"
+
+# ------------------------------------------- calico
+# [calico]设置 CALICO_IPV4POOL_IPIP=“off”,可以提高网络性能，条件限制详见 docs/setup/calico.md
+CALICO_IPV4POOL_IPIP: "Always"
+
+# [calico]设置 calico-node使用的host IP，bgp邻居通过该地址建立，可手工指定也可以自动发现
+IP_AUTODETECTION_METHOD: "can-reach={{ groups['kube_master'][0] }}"
+
+# [calico]设置calico 网络 backend: brid, vxlan, none
+CALICO_NETWORKING_BACKEND: "brid"
+
+# [calico]设置calico 是否使用route reflectors
+# 如果集群规模超过50个节点，建议启用该特性
+CALICO_RR_ENABLED: false
+
+# CALICO_RR_NODES 配置route reflectors的节点，如果未设置默认使用集群master节点 
+# CALICO_RR_NODES: ["192.168.1.1", "192.168.1.2"]
+CALICO_RR_NODES: []
+
+# [calico]更新支持calico 版本: [v3.3.x] [v3.4.x] [v3.8.x] [v3.15.x]
+calico_ver: "__calico__"
+
+# [calico]calico 主版本
+calico_ver_main: "{{ calico_ver.split('.')[0] }}.{{ calico_ver.split('.')[1] }}"
+
+# ------------------------------------------- cilium
+# [cilium]镜像版本
+cilium_ver: "__cilium__"
+cilium_connectivity_check: true
+cilium_hubble_enabled: false
+cilium_hubble_ui_enabled: false
+
+# ------------------------------------------- kube-ovn
+# [kube-ovn]选择 OVN DB and OVN Control Plane 节点，默认为第一个master节点
+OVN_DB_NODE: "{{ groups['kube_master'][0] }}"
+
+# [kube-ovn]离线镜像tar包
+kube_ovn_ver: "__kube_ovn__"
+
+# ------------------------------------------- kube-router
+# [kube-router]公有云上存在限制，一般需要始终开启 ipinip；自有环境可以设置为 "subnet"
+OVERLAY_TYPE: "full"
+
+# [kube-router]NetworkPolicy 支持开关
+FIREWALL_ENABLE: true
+
+# [kube-router]kube-router 镜像版本
+kube_router_ver: "__kube_router__"
+busybox_ver: "1.28.4"
+
+
+############################
+# role:cluster-addon
+############################
+# coredns 自动安装
+dns_install: "yes"
+corednsVer: "__coredns__"
+ENABLE_LOCAL_DNS_CACHE: true
+dnsNodeCacheVer: "__dns_node_cache__"
+# 设置 local dns cache 地址
+LOCAL_DNS_CACHE: "169.254.20.10"
+
+# metric server 自动安装
+metricsserver_install: "yes"
+metricsVer: "__metrics__"
+
+# dashboard 自动安装
+dashboard_install: "yes"
+dashboardVer: "__dashboard__"
+dashboardMetricsScraperVer: "__dash_metrics__"
+
+# prometheus 自动安装
+prom_install: "no"
+prom_namespace: "monitor"
+prom_chart_ver: "__prom_chart__"

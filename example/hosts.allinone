@@ -1,0 +1,61 @@
+# 'etcd' cluster should have odd member(s) (1,3,5,...)
+# [etcd]
+# 192.168.1.1
+
+# master node(s)
+[kube_master]
+172.21.33.70 ansible_ssh_user=root
+
+
+# 同步时间 set ntp server
+[chrony]
+
+
+# work node(s)
+[kube_node]
+172.21.33.70 ansible_ssh_user=root
+
+# [optional] harbor server, a private docker registry
+# 'NEW_INSTALL': 'true' to install a harbor server; 'false' to integrate with existed one
+[harbor]
+#192.168.1.8 NEW_INSTALL=false
+
+[all:vars]
+# --------- Main Variables ---------------
+# Secure port for apiservers
+SECURE_PORT="6443"
+
+# Cluster container-runtime supported: docker, containerd
+# if k8s version >= 1.24, docker is not supported
+CONTAINER_RUNTIME="containerd"
+
+# Network plugins supported: calico, flannel, kube-router, cilium, kube-ovn
+CLUSTER_NETWORK="calico"
+
+# Service proxy mode of kube-proxy: 'iptables' or 'ipvs'
+PROXY_MODE="ipvs"
+
+# K8S Service CIDR, not overlap with node(host) networking
+SERVICE_CIDR="10.68.0.0/16"
+
+# Cluster CIDR (Pod CIDR), not overlap with node(host) networking
+CLUSTER_CIDR="172.20.0.0/16"
+
+# NodePort Range
+NODE_PORT_RANGE="30000-32767"
+
+# Cluster DNS Domain
+CLUSTER_DNS_DOMAIN="cluster.local"
+
+# -------- Additional Variables (don't change the default value right now)---
+# Binaries Directory
+bin_dir="/opt/kube/bin"
+
+# Deploy Directory (kubeasz workspace)
+base_dir="/etc/kubeasz"
+
+# Directory for a specific cluster
+cluster_dir="{{ base_dir }}/clusters/_cluster_name_"
+
+# CA and other components cert/key Directory
+ca_dir="/etc/kubernetes/ssl"
