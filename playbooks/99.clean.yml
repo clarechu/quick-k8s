@@ -4,8 +4,6 @@
 - hosts:
   - kube_master
   - kube_node
-  - ex_lb
-  - etcd
   vars:
     DEL_MASTER: "yes"
     DEL_NODE: "yes"

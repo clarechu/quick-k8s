@@ -1,9 +1,13 @@
+
+- name: reset kubenertes cluster
+  shell: kubeadm reset -f
+  ignore_errors: true
+
 # to clean 'kube_node' nodes
 - block:
   - name: stop and disable kube_node service
     service: name={{ item }} state=stopped enabled=no
     with_items:
-    - kube-lb
     - kubelet
     - kube-proxy
     ignore_errors: true
@@ -17,10 +21,15 @@
   - name: remove files and dirs of 'kube_node' nodes
     file: name={{ item }} state=absent
     with_items:
-    - "/var/lib/kubelet/"
+    - "/etc/kubelet/"
+    - "/etc/cni"
+    - "/opt/cni"
+    - "/var/lib/etcd"
+    - "/var/etcd"
     - "/var/lib/kube-proxy/"
     - "/etc/systemd/system/kube-lb.service"
     - "/etc/systemd/system/kubelet.service"
+    - "/etc/systemd/system/kubelet.service.d"
     - "/etc/systemd/system/kube-proxy.service"
     - "/etc/kube-lb/"
     - "/etc/kubernetes/"
