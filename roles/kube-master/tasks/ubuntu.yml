@@ -1,0 +1,41 @@
+- name: 生成 Kubernetes GPG 公钥
+  ansible.builtin.get_url:
+    url: https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg
+    dest: /tmp/kubernetes.gpg
+    owner: root
+  ignore_errors: true
+  when:
+  - 'INSTALL_SOURCE != "offline"'
+
+- name: 添加 Kubernetes GPG 公钥
+  shell:
+    cmd: |
+      apt-key add /tmp/kubernetes.gpg
+      add-apt-repository "deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main"
+      apt update
+  ignore_errors: true
+  when:
+  - 'INSTALL_SOURCE != "offline"'
+
+
+- name: "安装 kubelet-{{ kube_version }} kubectl-{{ kube_version }}"
+  apt:
+    name:
+    - "kubelet={{ kube_version }}-00"
+    - "kubectl={{ kube_version }}-00"
+    state: present
+    allow_unauthenticated: true
+  ignore_errors: true
+  when:
+  - 'INSTALL_SOURCE != "offline"'
+
+
+- name: "安装 kubeadm-{{ kube_version }}"
+  apt:
+    name:
+    - "kubeadm={{ kube_version }}-00"
+    state: present
+    allow_unauthenticated: true
+  ignore_errors: true
+  when:
+  - 'INSTALL_SOURCE != "offline"'

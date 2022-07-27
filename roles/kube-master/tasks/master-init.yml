@@ -15,9 +15,7 @@
   with_items: "{{ kube_image_list.stdout_lines }}"
 
 - name: 初始化第一个 master 节点
-  shell: kubeadm init --config=/etc/kubernetes/kubeadm-config.yaml --ignore-preflight-errors=ImagePull
-
-- include_tasks: "{{ (role_path + '/../kube-certificates/tasks/kubeconfig.yml') | realpath  }}"
+  shell: kubeadm init --ignore-preflight-errors=ImagePull --image-repository {{ kube_image_repository }}
 
 - name: 重新加载 daemon
   systemd:
@@ -55,27 +53,3 @@
   until: controller_manager_result.status == 200
   retries: 60
   delay: 5
-
-- name: 创建 kubelet 自动轮换服务端证书配置
-  template:
-    src: kubelet-certificates-renewal.yaml.j2
-    dest: /etc/kubernetes/config/kubelet-certificates-renewal.yaml
-    owner: root
-    group: root
-    mode: 0644
-
-- name: 授权 kubelet 自动轮换服务端证书
-  shell: kubectl apply -f /etc/kubernetes/config/kubelet-certificates-renewal.yaml
-
-- block:
-  - name: 创建 Pod 安全策略配置文件
-    template:
-      src: pod-security-policy.yaml.j2
-      dest: /etc/kubernetes/config/pod-security-policy.yaml
-      owner: root
-      group: root
-      mode: 0644
-  
-  - name: 配置 Pod 安全策略
-    shell: kubectl apply -f /etc/kubernetes/config/pod-security-policy.yaml
-  when: '"PodSecurityPolicy" in kube_apiserver_enable_admission_plugins'

@@ -25,15 +25,6 @@
   systemd:
     daemon_reload: yes
 
-- name: 启动/重启 Docker
-  service:
-    name: docker
-    state: restarted
-    enabled: yes
-  when: 
-  - configuration_result.changed
-  - '"active" not in docker_already_running.stdout'
-
 - block:
   - name: 需手动重启 Docker 
     vars: 
@@ -62,11 +53,24 @@
   - configuration_result.changed
   - '"active" in docker_already_running.stdout'
 
-- name: 设置 Docker 开机自启
-  service:
-    name: docker
-    state: started
-    enabled: yes
+- name: 开启docker 服务
+  shell: systemctl daemon-reload && systemctl restart docker
+  register: result
+  until: result is not failed
+  retries: 10
+  delay: 6
+
+- name: 轮询等待docker服务运行
+  shell: |
+      systemctl is-active docker.service
+  register: docker_status
+  until: '"active" in docker_status.stdout'
+  retries: 10
+  delay: 6
+- name: 开机启用docker 服务
+  shell: systemctl enable docker
+  ignore_errors: true
+
 
 - name: 添加当前用户到 Docker 用户组
   user:

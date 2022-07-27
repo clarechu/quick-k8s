@@ -175,7 +175,7 @@ pod_infra_container_image: "{{ kube_image_repository }}/pause:3.7"
 # Docker 版本
 # apt-cache madison docker-ce
 # yum list docker-ce --showduplicates --enablerepo=docker-ce-stable | sort -r
-docker_version: 20.10.11
+docker_version: 20.10.12
 
 # Dockerhub 国内镜像加速地址
 docker_mirror:
@@ -202,7 +202,7 @@ docker_max_concurrent_downloads: 10
 # kubernetes版本
 # apt-cache madison kubeadm
 # yum list kubeadm --showduplicates --enablerepo=kubernetes | sort -r
-kube_version: 1.22.10
+kube_version: 1.20.15
 
 # CentOS
 kubernetes_yum_repo: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-{{ ansible_architecture }}/

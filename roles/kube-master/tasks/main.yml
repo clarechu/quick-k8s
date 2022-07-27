@@ -1,3 +1,10 @@
+- import_tasks: ubuntu.yml
+  when: 'ansible_distribution in ["Ubuntu","Debian"]'
+
+- import_tasks: centos.yml
+  when: 'ansible_distribution in ["CentOS","RedHat","Amazon","Aliyun"]'
+
+
 - name: 判断 Docker 是否早已安装
   shell: >
     systemctl status docker | grep running || echo "not running"
@@ -54,14 +61,14 @@
 - include_tasks: master-init.yml
   when: 
   - not kubelet_conf_stat.stat.exists
-  - inventory_hostname == groups['kube-master'][0]
+  - inventory_hostname == groups['kube_master'][0]
 
 # 初始化其他 master 节点
 - include_tasks: master-join.yml
   when: 
   - not kubelet_conf_stat.stat.exists
-  - inventory_hostname != groups['kube-master'][0]
-  - inventory_hostname in (groups['kube-master'] + groups['new-master'])
+  - inventory_hostname != groups['kube_master'][0]
+  - inventory_hostname in (groups['kube_master'] + groups['new_master'])
 
 - name: 确认 kubelet 配置是否有修改
   template:

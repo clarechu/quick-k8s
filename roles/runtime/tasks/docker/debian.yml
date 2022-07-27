@@ -19,7 +19,9 @@
     - "docker-ce={{ docker_version }}~ce~3-0~{{ ansible_distribution | lower }}"
     state: present
     allow_unauthenticated: true
-  when: docker_version is version('18.09', '<') or 'INSTALL_SOURCE != "offline"'
+  when:
+  - docker_version is version('18.09', '<')
+  - 'INSTALL_SOURCE != "offline"'
 
 - name: 安装 Docker
   apt: 
@@ -29,4 +31,6 @@
     - "containerd.io={{ containerd_version }}"
     state: present
     allow_unauthenticated: true
-  when: docker_version is version('18.09', '>=') or 'INSTALL_SOURCE != "offline"'
+  when:
+  - docker_version is version('18.09', '>=')
+  - 'INSTALL_SOURCE != "offline"'

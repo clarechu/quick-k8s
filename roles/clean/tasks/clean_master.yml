@@ -12,8 +12,22 @@
   - kube-apiserver
   - kube-controller-manager
   - kube-scheduler
+  - docker
+  - containerd
   ignore_errors: true
   when: "inventory_hostname in groups['kube_master']"
+
+- name: remove apt  kube_master service
+  apt:
+    name:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - kubeadm
+    - kubelet
+    - kubectl
+    state: absent
+  ignore_errors: true
 
 
 - name: remove files and dirs of 'kube_master' nodes
