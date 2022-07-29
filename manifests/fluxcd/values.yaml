@@ -1,0 +1,31 @@
+image:  
+  pullPolicy: IfNotPresent
+  helmController:
+    repository: docker.io/fluxcd
+    tag: v0.21.0
+  imageAutomationController:
+    repository: docker.io/fluxcd
+    tag: v0.22.1
+  imageReflectorController:
+    repository: docker.io/fluxcd
+    tag: v0.18.0
+  kustomizeController:
+    repository: docker.io/fluxcd
+    tag: v0.25.0
+  notificationController:
+    repository: docker.io/fluxcd
+    tag: v0.23.5
+  sourceController:
+    repository: docker.io/fluxcd
+    tag: v0.24.4
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 1Gi
+  requests:
+    cpu: 50m
+    memory: 20Mi  
+
+
+imagePullSecrets: []

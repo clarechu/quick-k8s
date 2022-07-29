@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: flux-system
+    app.kubernetes.io/part-of: flux
+    control-plane: controller
+  name: image-reflector-controller
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: image-reflector-controller
+  template:
+    metadata:
+      annotations:
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+      labels:
+        app: image-reflector-controller
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}    
+      containers:
+      - args:
+        - --events-addr=http://notification-controller.{{ .Release.Namespace }}.svc.cluster.local./
+        - --watch-all-namespaces
+        - --log-level=info
+        - --log-encoding=json
+        - --enable-leader-election
+        env:
+        - name: RUNTIME_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        image: {{ .Values.image.imageReflectorController.repository }}/image-reflector-controller:{{ .Values.image.imageReflectorController.tag }}
+        imagePullPolicy: {{ quote .Values.image.pullPolicy }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: healthz
+        name: manager
+        ports:
+        - containerPort: 8080
+          name: http-prom
+          protocol: TCP
+        - containerPort: 9440
+          name: healthz
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: healthz
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 64Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - mountPath: /tmp
+          name: temp
+        - mountPath: /data
+          name: data
+      securityContext:
+        fsGroup: 1337
+      serviceAccountName: image-reflector-controller
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - emptyDir: {}
+        name: temp
+      - emptyDir: {}
+        name: data

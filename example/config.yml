@@ -11,6 +11,16 @@ OS_HARDEN: false
 CLUSTER_NAME: "cluster1"
 CONTEXT_NAME: "context-{{ CLUSTER_NAME }}"
 
+
+
+############################
+# role:network [flannel,calico,cilium,kube-ovn,kube-router]
+############################
+# ------------------------------------------- flannel
+# [flannel]设置flannel 后端"host-gw","vxlan"等
+FLANNEL_BACKEND: "vxlan"
+DIRECT_ROUTING: false
+
 # ------------------------------------------- docker
 # [docker]容器存储目录
 DOCKER_STORAGE_DIR: "/var/lib/docker"
