@@ -42,14 +42,6 @@ host_distribution_release: >-
   {{ ansible_distribution_release }}
   {%- endif -%}
 
-# 当前节点 ip
-current_host_ip: >-
-  {%- if hostvars[inventory_hostname]['ansible_host'] is defined -%}
-  {{ hostvars[inventory_hostname]['ansible_host'] }}
-  {%- else -%}
-  {{ inventory_hostname }}
-  {%- endif -%}
-
 #--------------------------------------------------------------------------------------------------------#
 #----------------------------------------------- 基础参数 ------------------------------------------------#
 #--------------------------------------------------------------------------------------------------------#

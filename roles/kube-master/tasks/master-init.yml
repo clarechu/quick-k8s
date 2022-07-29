@@ -14,9 +14,21 @@
   shell: "{{ image_pull_command }} {{ item }}"
   with_items: "{{ kube_image_list.stdout_lines }}"
 
-- name: 初始化第一个 master 节点
-  shell: kubeadm init --ignore-preflight-errors=ImagePull --image-repository {{ kube_image_repository }}
+- name: 获取第一个节点的LB 地址
+  shell: |
+   echo "{{ current_host_ip }} lb.kubernetes.com"
+  register: lb_address
 
+- name: 设置LB的域名解析
+  shell: |
+   echo "{{lb_address.stdout}}" >> /etc/hosts
+
+- name: 初始化第一个 master 节点
+  shell: |
+    kubeadm init --ignore-preflight-errors=ImagePull --image-repository {{ kube_image_repository }} \
+    --control-plane-endpoint lb.kubernetes.com \
+    --pod-network-cidr {{CLUSTER_CIDR}} \
+     --service-cidr {{SERVICE_CIDR}}
 - name: 重新加载 daemon
   systemd:
     daemon_reload: yes
@@ -53,3 +65,9 @@
   until: controller_manager_result.status == 200
   retries: 60
   delay: 5
+
+- name: 配置
+  shell: |
+    mkdir -p $HOME/.kube
+    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    sudo chown $(id -u):$(id -g) $HOME/.kube/config

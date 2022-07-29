@@ -1,0 +1,46 @@
+- name: 创建 kubernetes 相关目录
+  file:
+    name: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ kubelet_root_dir }}"
+    - /etc/kubernetes
+    - /usr/share/bash-completion/completions
+
+- name: 确认 kubelet 已停止运行
+  service:
+    name: kubelet
+    state: stopped
+    enabled: yes
+
+- name: 获取 master 节点需要拉取的镜像列表
+  shell: >
+    kubeadm config images list --image-repository {{ kube_image_repository }}
+  register: kube_image_list
+
+
+- name: 设置LB的域名解析
+  shell: |
+   echo "{{hostvars[(groups['kube_master'][0])]['lb_address'].stdout}}" >> /etc/hosts
+
+
+- name: 开始拉取 master 节点相关镜像
+  shell: "{{ image_pull_command }} {{ item }}"
+  with_items: "{{ kube_image_list.stdout_lines }}"
+
+- name: 创建 kubernetes 相关目录
+  file:
+    name: "{{ item }}"
+    state: directory
+  with_items:
+  - "{{ kubelet_root_dir }}"
+  - "{{ audit_policy_file | dirname }}"
+  - /etc/kubernetes/pki
+  - /etc/kubernetes/config
+  - /etc/kubernetes/manifests
+  - /var/log/kubernetes/audit
+  - /usr/share/bash-completion/completions
+
+- name: node 节点加入集群
+  shell: >
+     {{kubeadm_token.stdout}}

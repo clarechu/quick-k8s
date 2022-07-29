@@ -1,8 +1,21 @@
+
+# 如果当前kubelet 正在运行那么就不改变当前节点
+- name: 判断 Kubelet 是否正在运行
+  shell: >
+    systemctl status kubelet | grep running || echo "not running"
+  register: kubelet_already_running
+
+
 - import_tasks: ubuntu.yml
-  when: 'ansible_distribution in ["Ubuntu","Debian"]'
+  when:
+  - 'ansible_distribution in ["Ubuntu","Debian"]'
+  - '"active" not in kubelet_already_running.stdout'
 
 - import_tasks: centos.yml
-  when: 'ansible_distribution in ["CentOS","RedHat","Amazon","Aliyun"]'
+  when:
+  - 'ansible_distribution in ["CentOS","RedHat","Amazon","Aliyun"]'
+  - '"active" not in kubelet_already_running.stdout'
+
 
 
 - name: 判断 Docker 是否早已安装
@@ -31,6 +44,9 @@
   - /etc/kubernetes/manifests
   - /var/log/kubernetes/audit
   - /usr/share/bash-completion/completions
+  when:
+  - '"active" not in kubelet_already_running.stdout'
+
 
 - name: 读取 kubelet.conf 文件 stat 信息
   stat: 
@@ -38,49 +54,45 @@
   register: kubelet_conf_stat
 
 # 生成 kubeadm 配置
+# TODO 后面使用kubemaster 创建实例
 - include_tasks: kubeadm-config.yml
+  when:
+    - '"active" not in kubelet_already_running.stdout'
 
-- name: 创建 EncryptionConfiguration 配置文件
-  template:
-    src: secrets-encryption.yaml.j2
-    dest: /etc/kubernetes/pki/secrets-encryption.yaml
-    owner: root
-    group: root
-    mode: 0644
-
-- name: 创建 apiserver 审计日志策略配置文件
-  template:
-    src: apiserver-audit-policy.yaml.j2
-    dest: "{{ audit_policy_file }}"
-    owner: root
-    group: root
-    mode: 0644
-  when: kubernetes_audit|default(false)
 
 # 初始化第一个 master 节点
 - include_tasks: master-init.yml
   when: 
   - not kubelet_conf_stat.stat.exists
   - inventory_hostname == groups['kube_master'][0]
+  - '"active" not in kubelet_already_running.stdout'
+
+# 获取集群token 的值
+- include_tasks: token.yml
+  when:
+    - inventory_hostname == groups['kube_master'][0]
+
+- block:
+    # 获取 当前的token值
+    - name: 获取token 参数
+      shell: |
+        echo "{{hostvars[(groups['kube_master'][0])]['kubeadm_token'].stdout}}"
+      register: kubeadm_token
+    - name: 获取 certificate-key 参数
+      shell: |
+        echo "{{hostvars[(groups['kube_master'][0])]['certificate_key'].stdout}}"
+      register: certificate_key
+  when:
+    - inventory_hostname != groups['kube_master'][0]
+    - inventory_hostname in (groups['kube_master'])
+    - '"active" not in kubelet_already_running.stdout'
+
 
 # 初始化其他 master 节点
 - include_tasks: master-join.yml
   when: 
   - not kubelet_conf_stat.stat.exists
   - inventory_hostname != groups['kube_master'][0]
-  - inventory_hostname in (groups['kube_master'] + groups['new_master'])
+  - inventory_hostname in (groups['kube_master'])
+  - '"active" not in kubelet_already_running.stdout'
 
-- name: 确认 kubelet 配置是否有修改
-  template:
-    src: kubelet-config.v1beta1.yaml.j2
-    dest: /var/lib/kubelet/config.yaml
-    owner: root
-    mode: 0644
-  register: configuration_result
-
-- name: 启动/重启 kubelet
-  service:
-    name: kubelet
-    state: restarted
-    enabled: yes
-  when: configuration_result.changed

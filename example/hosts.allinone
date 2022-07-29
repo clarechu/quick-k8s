@@ -5,6 +5,7 @@
 # master node(s)
 [kube_master]
 172.21.33.70 ansible_ssh_user=root
+172.21.33.78 ansible_ssh_user=root
 
 [new_master]
 # 同步时间 set ntp server
@@ -14,7 +15,7 @@
 
 # work node(s)
 [kube_node]
-172.21.33.70 ansible_ssh_user=root
+172.21.33.79 ansible_ssh_user=root
 
 # [optional] harbor server, a private docker registry
 # 'NEW_INSTALL': 'true' to install a harbor server; 'false' to integrate with existed one
@@ -37,10 +38,10 @@ CLUSTER_NETWORK="calico"
 PROXY_MODE="ipvs"
 
 # K8S Service CIDR, not overlap with node(host) networking
-SERVICE_CIDR="10.68.0.0/16"
+SERVICE_CIDR="10.96.0.0/12"
 
 # Cluster CIDR (Pod CIDR), not overlap with node(host) networking
-CLUSTER_CIDR="172.20.0.0/16"
+CLUSTER_CIDR="10.244.0.0/16"
 
 # NodePort Range
 NODE_PORT_RANGE="30000-32767"

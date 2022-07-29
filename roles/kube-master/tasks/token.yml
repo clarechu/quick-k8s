@@ -1,0 +1,21 @@
+- name: 删除过期的token 参数
+  shell: |
+    # 获取token的list
+    # kubeadm token list
+    kubeadm token list|grep -v TOKEN |awk '{print $1}'|xargs -i kubeadm token delete {}
+  ignore_errors: true
+- name: 获取kubeadm token 信息
+  shell: |
+    kubeadm token create --print-join-command
+  register: kubeadm_token
+- name: 创建certificate-key证书
+  shell: |
+    # kubeadm certs  certificate-key
+    # 生成 k8s证书
+    # openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
+    # kubeadm init phase upload-certs --upload-certs
+    kubeadm certs  certificate-key
+  register: certificate_key
+- name: upload certificate-key 证书
+  shell: |
+    kubeadm init phase upload-certs --upload-certs --certificate-key {{certificate_key.stdout}}

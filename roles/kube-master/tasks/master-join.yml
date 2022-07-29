@@ -14,12 +14,13 @@
   shell: "{{ image_pull_command }} {{ item }}"
   with_items: "{{ kube_image_list.stdout_lines }}"
 
+- name: 设置LB的域名解析
+  shell: |
+   echo "{{hostvars[(groups['kube_master'][0])]['lb_address'].stdout}}" >> /etc/hosts
+
 - name: 其他 master 节点加入集群
   shell: >
-    kubeadm join --config /etc/kubernetes/kubeadm-config.yaml 
-    --ignore-preflight-errors=ImagePull,DirAvailable--etc-kubernetes-manifests
-
-- include_tasks: "{{ (role_path + '/../kube-certificates/tasks/kubeconfig.yml') | realpath  }}"
+    {{kubeadm_token.stdout}} --control-plane --certificate-key {{certificate_key.stdout}} --ignore-preflight-errors=ImagePull
 
 - name: 重新加载 daemon
   systemd:

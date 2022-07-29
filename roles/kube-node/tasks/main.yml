@@ -1,0 +1,88 @@
+
+# 如果当前kubelet 正在运行那么就不改变当前节点
+- name: 判断 Kubelet 是否正在运行
+  shell: >
+    systemctl status kubelet | grep running || echo "not running"
+  register: kubelet_already_running
+
+
+- import_tasks: ubuntu.yml
+  when:
+  - 'ansible_distribution in ["Ubuntu","Debian"]'
+  - inventory_hostname not in (groups['kube_master'])
+  - '"active" not in kubelet_already_running.stdout'
+
+- import_tasks: centos.yml
+  when:
+  - 'ansible_distribution in ["CentOS","RedHat","Amazon","Aliyun"]'
+  - inventory_hostname not in (groups['kube_master'])
+  - '"active" not in kubelet_already_running.stdout'
+
+- name: 判断 Docker 是否早已安装
+  shell: >
+    systemctl status docker | grep running || echo "not running"
+  register: docker_already_running
+
+- name: 设置 container_manager_detected 变量
+  set_fact:
+    container_manager_detected: >-
+      {%- if "active" in docker_already_running.stdout -%}
+      docker
+      {%- else -%}
+      containerd
+      {%- endif -%}
+
+- include_tasks: token.yml
+  when:
+  - inventory_hostname == groups['kube_master'][0]
+
+- block:
+    # 获取 当前的token值
+  - name: 获取token 参数
+    shell: |
+      echo "{{hostvars[(groups['kube_master'][0])]['kubeadm_token'].stdout}}"
+    register: kubeadm_token
+  when:
+  - inventory_hostname not in (groups['kube_master'])
+
+- include_tasks: node_init.yml
+  when:
+    - inventory_hostname not in (groups['kube_master'])
+    # 如果 kubelet 已经存在了就不要添加了, 添加该节点了
+    - '"active" not in kubelet_already_running.stdout'
+
+
+
+#  - name: Worker 节点加入集群
+#    shell: >
+#      kubeadm join --config /etc/kubernetes/kubeadm-config.yaml
+#      --ignore-preflight-errors=DirAvailable--etc-kubernetes-manifests,FileAvailable--etc-kubernetes-pki-ca.crt
+#
+#  when:
+#  - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])
+#  - inventory_hostname not in (groups['kube-master'] + groups['new-master'])
+#  - not kubelet_conf_stat.stat.exists
+#
+#- block:
+#  - name: 确认 kubelet 配置是否有修改
+#    template:
+#      src: kubelet-config.v1beta1.yaml.j2
+#      dest: /var/lib/kubelet/config.yaml
+#      owner: root
+#      mode: 0644
+#    register: configuration_result
+#
+
+#  when:
+#  - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])
+#  - inventory_hostname not in (groups['kube-master'] + groups['new-master'])
+
+# - name: 取消在 worker 组的 master 节点 taint，使 master 节点可以调度
+#   shell: >
+#     kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/control-plane='':NoSchedule --overwrite &&
+#     kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/control-plane-
+#   delegate_to: "{{ groups['kube-master'][0] }}"
+#   ignore_errors: yes
+#   when: 
+#   - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])
+#   - inventory_hostname in (groups['kube-master'] + groups['new-master']) 
