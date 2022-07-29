@@ -37,7 +37,7 @@
     src: >-
       {% if inventory_hostname == groups['kube_master'][0] -%}
       kubeadm-controlplane-init.{{ kubeadmConfig_api_version }}.yaml.j2
-      {%- elif inventory_hostname in (groups['kube_master'] + groups['new_master']) -%}
+      {%- elif inventory_hostname in (groups['kube_master']) -%}
       kubeadm-controlplane-join.{{ kubeadmConfig_api_version }}.yaml.j2
       {%- else -%}
       kubeadm-join.{{ kubeadmConfig_api_version }}.yaml.j2

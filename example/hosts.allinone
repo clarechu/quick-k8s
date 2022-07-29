@@ -7,11 +7,8 @@
 172.21.33.70 ansible_ssh_user=root
 172.21.33.78 ansible_ssh_user=root
 
-[new_master]
 # 同步时间 set ntp server
 [chrony]
-
-[new-worker]
 
 # work node(s)
 [kube_node]
@@ -54,10 +51,7 @@ CLUSTER_DNS_DOMAIN="cluster.local"
 bin_dir="/opt/kube/bin"
 
 # Deploy Directory (kubeasz workspace)
-base_dir="/etc/kubeasz"
+base_dir="/etc/quick-k8s"
 
 # Directory for a specific cluster
 cluster_dir="{{ base_dir }}/clusters/_cluster_name_"
-
-# CA and other components cert/key Directory
-ca_dir="/etc/kubernetes/ssl"

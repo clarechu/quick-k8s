@@ -60,7 +60,7 @@ CLUSTER_DNS_DOMAIN="cluster.local"
 bin_dir="/opt/kube/bin"
 
 # Deploy Directory (kubeasz workspace)
-base_dir="/etc/kubeasz"
+base_dir="/etc/quick-k8s"
 
 # Directory for a specific cluster
 cluster_dir="{{ base_dir }}/clusters/_cluster_name_"
