@@ -1,0 +1,73 @@
+- block:
+  - name: 检查helm-cli 是否安装
+    shell: |
+      helm version
+    register: helm_cli_status
+    ignore_errors: true
+
+  - name: install helm cli 命令行工具
+    shell: |
+      wget -c https://get.helm.sh/helm-v3.9.2-linux-amd64.tar.gz -O /tmp/helm-v3.9.2-linux-amd64.tar.gz  
+      tar -zxvf /tmp/helm-v3.9.2-linux-amd64.tar.gz -C /tmp
+      mv /tmp/linux-amd64/helm /usr/local/bin/helm
+    when:
+    - '"version.BuildInfo" not in helm_cli_status.stdout'
+
+  - name: 上传manifests文件
+    run_once: true
+    copy:
+      src: "{{ base_dir }}/manifests"
+      dest: "/etc/quick-k8s"
+      force: yes
+      mode: 644
+  - name: 创建yaml文件夹
+    file:
+      path: /etc/quick-k8s/yml
+      state: directory
+      mode: 755
+
+  - name: 配置 flannel DaemonSet yaml文件
+    template: src=kube-flannel.yaml.j2 dest=/etc/quick-k8s/yml/flannel.yaml
+    run_once: true
+
+  - name: 配置 metrics-server  yaml文件
+    template: src=metrics-server.yaml.j2 dest=/etc/quick-k8s/yml/metrics-server.yaml
+    run_once: true
+
+  - name: 安装网络插件cni-flannel
+    shell: |
+      kubectl apply -f /etc/quick-k8s/yml/flannel.yaml
+    run_once: true
+    ignore_errors: true
+
+  - name: 安装监控插件
+    shell: |
+      kubectl apply -f /etc/quick-k8s/yml/metrics-server.yaml
+    run_once: true
+    ignore_errors: true
+
+  - name: 安装 ingress-nginx
+    run_once: true
+    shell: |
+      helm install ingress-nginx --create-namespace -n ingress-nginx /etc/quick-k8s/manifests/ingress-nginx \
+      --set controller.admissionWebhooks.patch.image.registry={{IMAGE_REGISTRY}} \
+      --set controller.image.registry={{IMAGE_REGISTRY}} \
+      --set controller.service.type=NodePort
+    ignore_errors: true
+
+  - name: 安装 vela-core
+    run_once: true
+    shell: |
+      helm install vela-core --create-namespace -n vela-system /etc/quick-k8s/manifests/vela-core \
+      --set hub={{IMAGE_REGISTRY}}/oamdev
+    ignore_errors: true
+
+#  - name: 安装 ingress-nginx
+#    shell: |
+#      helm upgrade vela-core --create-namespace -n ingress-nginx /etc/quick-k8s/manifests/ingress-nginx \
+#      --set controller.admissionWebhooks.path.image.registry={{IMAGE_REGISTRY}} \
+#      --set controller.image.registry={{IMAGE_REGISTRY}} \
+#      --set controller.service.type=NodePort
+
+  when:
+    - inventory_hostname == groups['kube_master'][0]

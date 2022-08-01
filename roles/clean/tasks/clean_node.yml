@@ -37,10 +37,6 @@
 
 # to clean container runtime and networking
   - block:
-      - name: to check if container 'kubeasz' is running
-        shell: 'docker ps|grep kubeasz || echo "NOT FOUND"'
-        register: install_info
-
       - block:
         - name: stop and disable docker service
           service:

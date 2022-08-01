@@ -14,11 +14,6 @@
   shell: "{{ image_pull_command }} {{ item }}"
   with_items: "{{ kube_image_list.stdout_lines }}"
 
-- name: 获取第一个节点的LB 地址
-  shell: |
-   echo "{{ current_host_ip }} lb.kubernetes.com"
-  register: lb_address
-
 - name: 设置LB的域名解析
   shell: |
    echo "{{lb_address.stdout}}" >> /etc/hosts

@@ -1,8 +1,0 @@
-name: flannel
-home: https://github.com/flannel-io/flannel
-version: v0.19.0
-appVersion: v0.19.0
-description: Flannel is a simple and easy way to configure a layer 3 network fabric designed for Kubernetes.
-sources:
-- https://github.com/flannel-io/flannel
-icon: https://github.com/flannel-io/flannel/blob/master/logos/flannel-horizontal-color.png

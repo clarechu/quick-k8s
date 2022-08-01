@@ -1,0 +1,6 @@
+# Note: this playbook can not run independently
+
+- hosts:
+  - kube_master
+  roles:
+  - manifests
