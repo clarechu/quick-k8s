@@ -12,7 +12,7 @@
 
 # work node(s)
 [kube_node]
-172.21.33.79 ansible_ssh_user=root
+# 172.21.33.79 ansible_ssh_user=root
 
 # [optional] harbor server, a private docker registry
 # 'NEW_INSTALL': 'true' to install a harbor server; 'false' to integrate with existed one

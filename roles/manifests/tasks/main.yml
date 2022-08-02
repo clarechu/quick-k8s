@@ -62,12 +62,21 @@
       --set hub={{IMAGE_REGISTRY}}/oamdev
     ignore_errors: true
 
-#  - name: 安装 ingress-nginx
-#    shell: |
-#      helm upgrade vela-core --create-namespace -n ingress-nginx /etc/quick-k8s/manifests/ingress-nginx \
-#      --set controller.admissionWebhooks.path.image.registry={{IMAGE_REGISTRY}} \
-#      --set controller.image.registry={{IMAGE_REGISTRY}} \
-#      --set controller.service.type=NodePort
+  - name: 安装 fluxcd
+    shell: |
+      helm install fluxcd --create-namespace -n flux-system /etc/quick-k8s/manifests/fluxcd \
+      --set image.helmController.repository={{IMAGE_REGISTRY}}/fluxcd \
+      --set image.imageAutomationController.repository={{IMAGE_REGISTRY}}/fluxcd \
+      --set image.imageReflectorController.repository={{IMAGE_REGISTRY}}/fluxcd \
+      --set image.kustomizeController.repository={{IMAGE_REGISTRY}}/fluxcd \
+      --set image.notificationController.repository={{IMAGE_REGISTRY}}/fluxcd \
+      --set image.sourceController.repository={{IMAGE_REGISTRY}}/fluxcd
+    ignore_errors: true
+
+  - name: 安装 prometheus-operator
+    shell: |
+      kubectl get po
+    ignore_errors: true
 
   when:
     - inventory_hostname == groups['kube_master'][0]

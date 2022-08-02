@@ -22,6 +22,9 @@
     file: name={{ item }} state=absent
     with_items:
     - "/etc/kubelet/"
+    - "/etc/containerd/"
+    - "/var/lib/docker"
+    - "/var/lib/kubelet"
     - "/etc/cni"
     - "/opt/cni"
     - "/var/lib/etcd"

@@ -13,8 +13,7 @@ CONTEXT_NAME: "context-{{ CLUSTER_NAME }}"
 
 
 # 拉取镜像地址
-# IMAGE_REGISTRY: "docker.io"
-IMAGE_REGISTRY: "harbor.apusic.com"
+IMAGE_REGISTRY: "docker.io"
 ############################
 # role:network [flannel,calico,cilium,kube-ovn,kube-router]
 ############################
