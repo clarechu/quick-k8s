@@ -102,7 +102,7 @@ container_manager: containerd
 
 # 容器运行时 CentOS 源
 docker_yum_repo: >-
-  https://mirrors.aliyun.com/docker-ce/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable
+  https://download.docker.com/linux/centos/docker-ce.repo
 
 # 容器运行时 Debian 源
 # sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7EA0A9C3F273FCD8

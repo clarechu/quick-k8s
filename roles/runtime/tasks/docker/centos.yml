@@ -1,31 +1,15 @@
 - name: 添加 Docker yum 仓库
-  yum_repository:
-    name: docker-ce-stable
-    file: docker-ce
-    description: Docker CE Stable - $basearch
-    baseurl: "{{ docker_yum_repo }}"
-    enabled: no
-    gpgcheck: no
-    state: present
+  shell: >
+    yum-config-manager --add-repo {{docker_yum_repo}}
 
+# yum list docker-ce --showduplicates | sort -r
 - name: 安装 Docker
   yum:
     name: 
-    - "docker-ce-{{ docker_version }}.ce"
+    - docker-ce-{{docker_version}}
+    - docker-ce-cli-{{docker_version}}
+    - docker-compose-plugin-2.6.0-3.el7
+    - containerd.io-1.6.6-3.1.el7
     state: present
-    enablerepo: docker-ce-stable
   when:
-  - docker_version is version('18.09', '>=')
-  - 'INSTALL_SOURCE != "offline"'
-
-- name: 安装 Docker
-  yum:
-    name: 
-    - "docker-ce-{{ docker_version }}"
-    - "docker-ce-cli-{{ docker_version }}"
-    - "containerd.io-{{ containerd_version.split('-')[0] }}"
-    state: present
-    enablerepo: docker-ce-stable
-  when:
-  - docker_version is version('18.09', '>=')
   - 'INSTALL_SOURCE != "offline"'
