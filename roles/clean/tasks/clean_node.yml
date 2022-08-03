@@ -3,6 +3,34 @@
   shell: kubeadm reset -f
   ignore_errors: true
 
+- name: remove apt  kube_master service
+  apt:
+    name:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - kubeadm
+    - kubelet
+    - kubectl
+    state: absent
+  ignore_errors: true
+  when:
+  - ansible_distribution in [ 'Ubuntu','Debian' ]
+
+- name: remove yum  kube_master service
+  yum:
+    name:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - kubeadm
+    - kubelet
+    - kubectl
+    state: absent
+  ignore_errors: true
+  when:
+  - ansible_distribution in [ 'CentOS','OracleLinux','RedHat' ]
+
 # to clean 'kube_node' nodes
 - block:
   - name: stop and disable kube_node service
@@ -85,7 +113,6 @@
           - "/etc/systemd/system/docker.service.d/"
           - "/etc/bash_completion.d/docker"
           - "/usr/bin/docker"
-        when: "'kubeasz' not in install_info.stdout"
     ignore_errors: true
     when: CONTAINER_RUNTIME == 'docker'
 

@@ -3,6 +3,8 @@
     name: kubelet
     state: stopped
     enabled: yes
+  ignore_errors: true
+
 
 - name: 获取 master 节点需要拉取的镜像列表
   shell: >

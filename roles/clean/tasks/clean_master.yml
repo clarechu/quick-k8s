@@ -28,7 +28,22 @@
     - kubectl
     state: absent
   ignore_errors: true
+  when:
+  - ansible_distribution in [ 'Ubuntu','Debian' ]
 
+- name: remove yum  kube_master service
+  yum:
+    name:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - kubeadm
+    - kubelet
+    - kubectl
+    state: absent
+  ignore_errors: true
+  when:
+  - ansible_distribution in [ 'CentOS','OracleLinux','RedHat' ]
 
 - name: remove files and dirs of 'kube_master' nodes
   file: name={{ item }} state=absent
