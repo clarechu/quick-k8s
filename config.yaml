@@ -1,0 +1,90 @@
+cluster: cluster01
+# 这个地方暂时不支持升级 仅仅只支持v1.20.15 版本的k8s
+kubernetesVersion: v1.20.15
+controlPlaneEndpoint: kubernetes.cluster.local:6443
+kubernetesImages:
+- name: kube-apiserver
+  host: k8s.gcr.io
+  repository: k8s.gcr.io/kube-apiserver:v1.20.15
+- name: kube-controller-manager
+  host: k8s.gcr.io
+  repository: k8s.gcr.io/kube-controller-manager:v1.20.15
+- name: kube-scheduler
+  host: k8s.gcr.io
+  repository: k8s.gcr.io/kube-scheduler:v1.20.15
+- name: kube-proxy
+  host: k8s.gcr.io
+  repository: k8s.gcr.io/kube-proxy:v1.20.15
+- name: pause
+  host: k8s.gcr.io
+  repository: k8s.gcr.io/pause:3.2
+- name: etcd
+  host: k8s.gcr.io
+  repository: k8s.gcr.io/etcd:3.4.13-0
+- name: coredns
+  host: k8s.gcr.io
+  repository: k8s.gcr.io/coredns:1.7.0
+addonImages:
+- name: mirrored-flannelcni-flannel
+  host: docker.io
+  repository: docker.io/rancher/mirrored-flannelcni-flannel:v0.19.0
+- name: controller
+  host: registry.k8s.io
+  repository: registry.k8s.io/ingress-nginx/controller:v1.3.0
+- name: kube-webhook-certgen
+  host: docker.io
+  repository: docker.io/oamdev/kube-webhook-certgen:v2.4.1
+- name: vela-core
+  host: docker.io
+  repository: docker.io/oamdev/vela-core:v1.4.0
+- name: cluster-gateway
+  host: docker.io
+  repository: docker.io/oamdev/cluster-gateway:v1.4.0
+- name: mirrored-flannelcni-flannel-cni-plugin
+  host: docker.io
+  repository: docker.io/rancher/mirrored-flannelcni-flannel-cni-plugin:v1.1.0
+- name: image-automation-controller
+  host: docker.io
+  repository: docker.io/fluxcd/image-automation-controller:v0.22.1
+- name: kustomize-controller
+  host: docker.io
+  repository: docker.io/fluxcd/kustomize-controller:v0.25.0
+- name: image-reflector-controller
+  host: docker.io
+  repository: docker.io/fluxcd/image-reflector-controller:v0.18.0
+- name: notification-controller
+  host: docker.io
+  repository: docker.io/fluxcd/notification-controller:v0.23.5
+- name: helm-controller
+  host: docker.io
+  repository: docker.io/fluxcd/helm-controller:v0.21.0
+- name: source-controller
+  host: docker.io
+  repository: docker.io/fluxcd/source-controller:v0.24.4
+- name: traefik
+  host: docker.io
+  repository: docker.io/traefik:2.6.3
+- name: metrics-server
+  host: docker.io
+  repository: docker.io/metrics-server/metrics-server:v0.6.1
+- name: kube-webhook-certgen
+  host: docker.io
+  repository: docker.io/ingress-nginx/kube-webhook-certgen:v1.1.1
+binaryUri:
+- name: helm
+  uri: https://get.helm.sh/helm-v3.9.2-linux-amd64.tar.gz
+redHatPackageManagerUri:
+# 安装docker 所需的安装包
+- name: docker-ce-cli
+  uri: https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-cli-20.10.12-3.el7.x86_64.rpm
+- name: docker-ce
+  uri: https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-20.10.12-3.el7.x86_64.rpm
+- name: containerd.io
+  uri: https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.6.6-3.1.el7.x86_64.rpm
+debianPackageManagerUri:
+- name: docker-ce-cli
+  uri: https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/docker-ce-cli_20.10.12~3-0~ubuntu-bionic_amd64.deb
+- name: docker-ce
+  uri: https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/docker-ce_20.10.12~3-0~ubuntu-bionic_amd64.deb
+- name: containerd.io
+  uri: https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/containerd.io_1.6.6-1_amd64.deb
