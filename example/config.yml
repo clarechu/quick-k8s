@@ -2,7 +2,7 @@
 # prepare
 ############################
 # 可选离线安装系统软件包 (offline|online)
-INSTALL_SOURCE: "online"
+INSTALL_SOURCE: "offline"
 
 # 可选进行系统安全加固 github.com/dev-sec/ansible-collection-hardening
 OS_HARDEN: false
@@ -30,7 +30,7 @@ DOCKER_STORAGE_DIR: "/var/lib/docker"
 ENABLE_REMOTE_API: false
 
 # [docker]信任的HTTP仓库
-# INSECURE_REG: '["http://easzlab.io.local:5000"]'
+INSECURE_REG: "registry.local:5000"
 
 # 配置为kube组件（kubelet,kube-proxy,dockerd等）预留的资源量
 # 数值设置详见templates/kubelet-config.yaml.j2

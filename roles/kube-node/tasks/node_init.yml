@@ -18,12 +18,6 @@
     kubeadm config images list --image-repository {{ kube_image_repository }}
   register: kube_image_list
 
-
-- name: 设置LB的域名解析
-  shell: |
-   echo "{{hostvars[(groups['kube_master'][0])]['lb_address'].stdout}}" >> /etc/hosts
-
-
 - name: 开始拉取 master 节点相关镜像
   shell: "{{ image_pull_command }} {{ item }}"
   with_items: "{{ kube_image_list.stdout_lines }}"

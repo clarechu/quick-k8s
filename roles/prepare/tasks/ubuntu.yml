@@ -29,8 +29,9 @@
   ignore_errors: true
 
 # 离线安装基础软件包
-- import_tasks: offline.yml
-  when: 'INSTALL_SOURCE == "offline"'
+# TODO 后面在处理离线包的问题
+# - import_tasks: offline.yml
+#   when: 'INSTALL_SOURCE == "offline"'
 
 # 优化设置 journal 日志相关，避免日志重复搜集，浪费系统资源
 - name: 准备 journal 日志相关目录

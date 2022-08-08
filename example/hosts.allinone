@@ -51,6 +51,6 @@ bin_dir="/opt/kube/bin"
 
 # Deploy Directory (quick k8s workspace)
 # base_dir="/etc/quick-k8s"
-base_dir="/Users/clare/go/src/github.com/ClareChu/quick-k8s"
+base_dir="/Users/clare/go/src/github.com/clarechu/quick-k8s"
 # Directory for a specific cluster
 cluster_dir="{{ base_dir }}/clusters/_cluster_name_"

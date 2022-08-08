@@ -57,3 +57,11 @@
     state: present
     regexp: 'registry.local'
     line: "{{ ansible_env.SSH_CLIENT.split(' ')[0] }}    registry.local"
+
+
+- name: 添加 kubernetes hosts 解析
+  lineinfile:
+    dest: /etc/hosts
+    state: present
+    regexp: 'lb.kubernetes.com'
+    line: "{{  groups['kube_master'][0] }}    lb.kubernetes.com"

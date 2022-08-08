@@ -81,6 +81,12 @@ redHatPackageManagerUri:
   uri: https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-20.10.12-3.el7.x86_64.rpm
 - name: containerd.io-1.6.6-3.1.el7.x86_64.rpm
   uri: https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.6.6-3.1.el7.x86_64.rpm
+- name: kubeadm-1.20.15-0.x86_64.rpm
+  uri: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/Packages/ee0ab01c427e97e7d555323713644df281e3f7ed667efb654c01be332e243c1f-kubeadm-1.20.15-0.x86_64.rpm
+- name: kubelet-1.20.15-0.x86_64.rpm
+  uri: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/Packages/22bae2c4b5447d15b445c9df52f16eb4af531bf3834be41fe473b6c1fdf321e9-kubelet-1.20.15-0.x86_64.rpm
+- name: kubectl-1.20.15-0.x86_64.rpm
+  uri: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/Packages/bf71d3facfceb5067ac18018ffeb6c77566dad40cf463e2ebecd6ac52bbf0b94-kubectl-1.20.15-0.x86_64.rpm
 debianPackageManagerUri:
 - name: docker-ce-cli_20.10.12~3-0~ubuntu-bionic_amd64.deb
   uri: https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/docker-ce-cli_20.10.12~3-0~ubuntu-bionic_amd64.deb
@@ -88,3 +94,9 @@ debianPackageManagerUri:
   uri: https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/docker-ce_20.10.12~3-0~ubuntu-bionic_amd64.deb
 - name: containerd.io_1.6.6-1_amd64.deb
   uri: https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/containerd.io_1.6.6-1_amd64.deb
+- name: kubeadm_1.20.15-00_amd64.deb
+  uri: https://mirrors.aliyun.com/kubernetes/apt/pool/kubeadm_1.20.15-00_amd64_d2df821caf28316ac7288f5a75b29cd28c359696ef1fc88dc8dd688e324622b6.deb
+- name: kubectl_1.20.15-00_amd64.deb
+  uri: https://mirrors.aliyun.com/kubernetes/apt/pool/kubectl_1.20.15-00_amd64_80a863a434987db56c30901d54627efe4f9fbe712cc6befc61c716c1ead4680d.deb
+- name: kubelet_1.20.15-00_amd64.deb
+  uri: https://mirrors.aliyun.com/kubernetes/apt/pool/kubelet_1.20.15-00_amd64_02e67343648454533e967ee2b19a2c4f2cae2b3b85d38bc9be1e589152ee082c.deb

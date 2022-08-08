@@ -16,10 +16,6 @@
   shell: "{{ image_pull_command }} {{ item }}"
   with_items: "{{ kube_image_list.stdout_lines }}"
 
-- name: 设置LB的域名解析
-  shell: |
-   echo "{{hostvars[(groups['kube_master'][0])]['lb_address'].stdout}}" >> /etc/hosts
-
 - name: 其他 master 节点加入集群
   shell: >
     {{kubeadm_token.stdout}} --control-plane --certificate-key {{certificate_key.stdout}} --ignore-preflight-errors=ImagePull

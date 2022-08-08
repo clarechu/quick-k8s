@@ -14,10 +14,6 @@
   shell: "{{ image_pull_command }} {{ item }}"
   with_items: "{{ kube_image_list.stdout_lines }}"
 
-- name: 设置LB的域名解析
-  shell: |
-   echo "{{lb_address.stdout}}" >> /etc/hosts
-
 - name: 初始化第一个 master 节点
   shell: |
     kubeadm init --ignore-preflight-errors=ImagePull --image-repository {{ kube_image_repository }} \

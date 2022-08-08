@@ -25,8 +25,9 @@
   ignore_errors: true
 
 # 离线安装基础软件包
-- import_tasks: offline.yml
-  when: 'INSTALL_SOURCE == "offline"'
+# TODO 后面在处理离线包的问题
+# - import_tasks: offline.yml
+#   when: 'INSTALL_SOURCE == "offline"'
 
 - name: 临时关闭 selinux
   shell: "setenforce 0"

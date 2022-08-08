@@ -177,6 +177,7 @@ docker_mirror:
 docker_insecure_registries:
   - "{{ kube_pod_subnet }}"
   - "{{ kube_service_subnet }}"
+  - "{{ INSECURE_REG }}"
 
 # Docker 容器日志相关设置
 docker_log_driver: "json-file"

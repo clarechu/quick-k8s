@@ -175,11 +175,6 @@ pod_infra_container_image: "{{ kube_image_repository }}/pause:3.7"
 docker_mirror:
 # - "https://hub-mirror.c.163.com"
 
-# 信任的不安全镜像库地址，默认为 Pod 和 Service 网段
-docker_insecure_registries:
-  - "{{ kube_pod_subnet }}"
-  - "{{ kube_service_subnet }}"
-
 # Docker 容器日志相关设置
 docker_log_driver: "json-file"
 docker_log_level: "warn"
