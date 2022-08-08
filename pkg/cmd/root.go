@@ -12,6 +12,7 @@ Tips  Find more information at: https://github.com/clarechu/quick-k8s
 	}
 	rootCmd.AddCommand(ListCommand())
 	rootCmd.AddCommand(PullCommand())
+	rootCmd.AddCommand(SyncCommand())
 	rootCmd.AddCommand(VersionCommand())
 	return rootCmd
 }
