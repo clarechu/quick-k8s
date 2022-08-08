@@ -22,7 +22,7 @@ quick-k8s pull
 			List()
 		},
 	}
-	listCmd.Flags().StringVar(&filePath, "path", "/etc/quick-k8s/config.yaml", "配置文件的默认路径")
+	listCmd.Flags().StringVar(&filePath, "config", "/etc/quick-k8s/config.yaml", "配置文件的默认路径")
 	return listCmd
 }
 

@@ -7,24 +7,54 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"strings"
+	"path/filepath"
 	"time"
 )
 
-func Wget(uri string) error {
+type File struct {
+	// Mode 权限设置 644
+	Mode os.FileMode
+	// Path 下载路径
+	Path string
+	// FileName 文件名称
+	FileName string
+}
+
+func NewFile(path, name string) *File {
+	return &File{
+		Mode:     644,
+		Path:     path,
+		FileName: name,
+	}
+}
+
+func (f *File) Wget(uri string) error {
 	fmt.Println("downloading file...")
 
-	fileUrl, err := url.Parse(uri)
+	_, err := url.Parse(uri)
 
 	if err != nil {
 		return err
 	}
+	filename := filepath.Join(f.Path, f.FileName)
+	if _, err := os.Stat(filename); err != nil {
+		err = os.MkdirAll(f.Path, 644)
+		if err != nil {
+			return err
+		}
+	} else {
+		err = os.Remove(filename)
+		if err != nil {
+			return err
+		}
 
-	filePath := fileUrl.Path
-	segments := strings.Split(filePath, "/")
-	fileName := segments[len(segments)-1]
-	file, err := os.Create(fileName)
-
+	}
+	file, err := os.Create(filename)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	err = file.Chmod(f.Mode)
 	if err != nil {
 		fmt.Println(err)
 		return err
@@ -68,7 +98,7 @@ func Wget(uri string) error {
 		time.Sleep(time.Millisecond)
 	}
 	finishMessage := fmt.Sprintf("\n%s with %v bytes downloaded",
-		fileName, filesize)
+		f.FileName, filesize)
 	bar.FinishPrint(finishMessage)
 	return err
 }
