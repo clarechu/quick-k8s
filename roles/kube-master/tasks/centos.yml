@@ -22,3 +22,17 @@
     enablerepo: kubernetes
   when:
   - 'INSTALL_SOURCE != "offline"'
+
+- block:
+  - name: 离线下载Kubernetes rpm 包
+    copy:
+      src: "{{ base_dir }}/offline/packages/rpm/kubernetes-1.20.15.tgz"
+      dest: "/tmp"
+  - name: 解压kubernetes 安装包
+    shell: >
+      tar -xvf /tmp/kubernetes-1.20.15.tgz -C /tmp
+  - name: 离线安装 kubernetes
+    shell: >
+      yum install -y /tmp/kubernetes/*.rpm
+  when:
+  - 'INSTALL_SOURCE == "offline"'

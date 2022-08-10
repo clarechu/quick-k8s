@@ -3,30 +3,27 @@
     yum-config-manager --add-repo {{docker_yum_repo}}
   when:
   - 'INSTALL_SOURCE != "offline"'
+  - name: 安装 Docker
+    yum:
+      name:
+      - docker-ce-{{docker_version}}
+      - docker-ce-cli-{{docker_version}}
+      - docker-compose-plugin-2.6.0-3.el7
+      - containerd.io-1.6.6-3.1.el7
+      state: present
+    when:
+    - 'INSTALL_SOURCE != "offline"'
 
-# yum list docker-ce --showduplicates | sort -r
-- name: 安装 Docker
-  yum:
-    name: 
-    - docker-ce-{{docker_version}}
-    - docker-ce-cli-{{docker_version}}
-    - docker-compose-plugin-2.6.0-3.el7
-    - containerd.io-1.6.6-3.1.el7
-    state: present
-  when:
-  - 'INSTALL_SOURCE != "offline"'
-
-- name: 离线下载 Docker 安装包
-  copy:
-    src: "{{ base_dir }}/offline/packages/rpm/"
-    dest: "/tmp"
-  when:
-  - 'INSTALL_SOURCE == "offline"'
-
-- name: 离线安装 Docker
-  shell: |
-    rpm -ivh /tmp/containerd.io-1.6.6-3.1.el7.x86_64.rpm \
-    /tmp/docker-ce-20.10.12-3.el7.x86_64.rpm \
-    /tmp/docker-ce-cli-20.10.12-3.el7.x86_64.rpm
+- block:
+  - name: 离线下载 Docker 安装包
+    copy:
+      src: "{{ base_dir }}/offline/packages/rpm/docker-20.10.12.tgz"
+      dest: "/tmp"
+  - name: 解压docker 安装包
+    shell: >
+      tar -xvf /tmp/docker-20.10.12.tgz -C /tmp
+  - name: 离线安装 Docker
+    shell: >
+      yum install -y /tmp/docker/*.rpm
   when:
   - 'INSTALL_SOURCE == "offline"'
