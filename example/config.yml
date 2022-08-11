@@ -2,7 +2,7 @@
 # prepare
 ############################
 # 可选离线安装系统软件包 (offline|online)
-INSTALL_SOURCE: "offline"
+INSTALL_SOURCE: "online"
 
 # 可选进行系统安全加固 github.com/dev-sec/ansible-collection-hardening
 OS_HARDEN: false
