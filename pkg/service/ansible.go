@@ -7,24 +7,27 @@ import (
 	"github.com/apenella/go-ansible/pkg/playbook"
 )
 
-func Run() {
+type AnsibleClient struct {
+	ansibleClient *playbook.AnsiblePlaybookCmd
+}
 
-	ansiblePlaybookConnectionOptions := &options.AnsibleConnectionOptions{
-		Connection: "local",
-	}
-
+func NewAnsibleClient(playbooks []string, inventory string, envs ...string) *AnsibleClient {
+	ansiblePlaybookConnectionOptions := &options.AnsibleConnectionOptions{}
 	ansiblePlaybookOptions := &playbook.AnsiblePlaybookOptions{
-		Inventory: "127.0.0.1,",
+		Inventory:     inventory,
+		ExtraVarsFile: envs,
 	}
-
-	playbook := &playbook.AnsiblePlaybookCmd{
-		Playbooks:         []string{"site.yml", "site2.yml"},
+	ansiblePlaybookCmd := &playbook.AnsiblePlaybookCmd{
+		Playbooks:         playbooks,
 		ConnectionOptions: ansiblePlaybookConnectionOptions,
 		Options:           ansiblePlaybookOptions,
 	}
-
-	err := playbook.Run(context.TODO())
-	if err != nil {
-		panic(err)
+	return &AnsibleClient{
+		ansibleClient: ansiblePlaybookCmd,
 	}
+}
+
+func (a *AnsibleClient) Run() error {
+	err := a.ansibleClient.Run(context.TODO())
+	return err
 }

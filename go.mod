@@ -6,6 +6,7 @@ require (
 	github.com/apenella/go-ansible v1.1.6
 	github.com/cheggaaa/pb v1.0.29
 	github.com/docker/docker v20.10.17+incompatible
+	github.com/manifoldco/promptui v0.9.0
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.7.0
@@ -17,6 +18,7 @@ require (
 	github.com/Microsoft/go-winio v0.5.2 // indirect
 	github.com/apenella/go-common-utils/data v0.0.0-20210528133155-34ba915e28c8 // indirect
 	github.com/apenella/go-common-utils/error v0.0.0-20210528133155-34ba915e28c8 // indirect
+	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
