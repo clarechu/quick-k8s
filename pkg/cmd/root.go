@@ -7,8 +7,8 @@ import (
 
 func RootCommand(args []string) *cobra.Command {
 	rootCmd := &cobra.Command{
-		Use:   "quick-k8s",
-		Short: "quick-k8s ...",
+		Use:   "quickctl",
+		Short: "quickctl ...",
 		Long: `
 Tips  Find more information at: https://github.com/clarechu/quick-k8s
 `,

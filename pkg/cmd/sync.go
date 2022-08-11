@@ -23,7 +23,7 @@ func SyncCommand() *cobra.Command {
 将source docker.io 的同步镜像 同步到本地仓库
 
 EXAMPLE:
-quick-k8s sync --source * --dest registry.local 
+quickctl sync --source * --dest registry.local 
 `,
 		Run: func(cmd *cobra.Command, args []string) {
 			err := sync.Start()

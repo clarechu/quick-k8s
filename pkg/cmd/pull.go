@@ -6,7 +6,10 @@ import (
 	"github.com/clarechu/quick-k8s/pkg/models"
 	"github.com/clarechu/quick-k8s/pkg/service"
 	"github.com/spf13/cobra"
+	git "gopkg.in/src-d/go-git.v4"
+	"io"
 	log "k8s.io/klog/v2"
+	"os"
 	"path/filepath"
 )
 
@@ -26,7 +29,7 @@ func PullCommand() *cobra.Command {
 		Long: `
 下载安装k8s所需要的安装包(image, rpm, dep, helm chart)
 EXAMPLE:
-quick-k8s save 
+quickctl save 
 `,
 		Run: func(cmd *cobra.Command, args []string) {
 			config, err := service.GetConfig(filePath)
@@ -106,4 +109,26 @@ func SaveImage(path string) error {
 	dockerClient := service.NewNewDockerClient()
 	ctx := context.TODO()
 	return dockerClient.SaveAll(ctx, path)
+}
+
+func Clone(github, path string) error {
+	// Clones the repository into the worktree (fs) and storer all the .git
+	// content into the storer
+	_, err := git.PlainClone(path, false, &git.CloneOptions{
+		URL: github,
+	})
+	if err != nil {
+		return err
+	}
+
+	// Prints the content of the CHANGELOG file from the cloned repository
+	changelog, err := os.Open(filepath.Join(path, "CHANGELOG"))
+	if err != nil {
+		return err
+	}
+
+	io.Copy(os.Stdout, changelog)
+
+	// Output: Initial changelog
+	return err
 }

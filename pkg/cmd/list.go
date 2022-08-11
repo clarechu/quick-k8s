@@ -16,7 +16,7 @@ func ListCommand() *cobra.Command {
 		Long: `
 查询 需要安装 kubernetes 的包(image, rpm, dep, helm chart)
 EXAMPLE:
-quick-k8s pull 
+quickctl pull 
 `,
 		Run: func(cmd *cobra.Command, args []string) {
 			List()

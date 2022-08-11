@@ -8,8 +8,6 @@ import (
 	"os"
 )
 
-const BasicPath = "/etc/quick-k8s"
-
 func init() {
 	klog.InitFlags(nil)
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)

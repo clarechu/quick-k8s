@@ -37,14 +37,14 @@ func ClusterCommand(args []string) *cobra.Command {
       clean              清理节点的k8s及runtime
       harbor             安装新的harbor服务器或与现有服务器集成
 EXAMPLE:
-quick-k8s cluster 
+quickctl cluster 
 `,
 		PreRun: func(cmd *cobra.Command, args []string) {
 			//集群名称
 			if len(args) == 1 {
 				cluster.Name = args[0]
 			} else {
-				log.Fatal("请设置集群名称\n quick-k8s cluster <CLUSTER_NAME>")
+				log.Fatal("请设置集群名称\n quickctl cluster <CLUSTER_NAME>")
 			}
 
 			if cluster.Step == "" {
