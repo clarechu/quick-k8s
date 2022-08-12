@@ -38,14 +38,6 @@ dns:
   imageRepository: "{{ kube_image_repository }}"
 etcd:
   external:
-    endpoints:
-{% for host in ((groups['etcd'])) %}
-{% if hostvars[host]['ansible_host'] is defined %}
-    - https://{{ hostvars[host]['ansible_host'] }}:2379
-{% else %}
-    - https://{{ host }}:2379
-{% endif %}
-{% endfor %}
     caFile: /etc/kubernetes/pki/etcd/ca.crt
     certFile: /etc/kubernetes/pki/apiserver-etcd-client.crt
     keyFile: /etc/kubernetes/pki/apiserver-etcd-client.key

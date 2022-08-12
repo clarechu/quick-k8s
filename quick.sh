@@ -13,6 +13,3 @@ wget https://github.com/clarechu/quick-k8s/releases/download/v0.0.2/quickctl-v0.
 
 tar -xvf $basic_path/quickctl-v0.0.1-linux-amd64.tar.gz -C $basic_path \
   && rm -rf $basic_path/quickctl-v0.0.1-linux-amd64.tar.gz
-
-
-
