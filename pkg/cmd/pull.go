@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	git "gopkg.in/src-d/go-git.v4"
 	"io"
+	"io/fs"
 	log "k8s.io/klog/v2"
 	"os"
 	"path/filepath"
@@ -106,6 +107,9 @@ func DownloadDeb(config *models.ClusterConfiguration) {
 }
 
 func SaveImage(path string) error {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		os.MkdirAll(path, fs.ModePerm)
+	}
 	dockerClient := service.NewNewDockerClient()
 	ctx := context.TODO()
 	return dockerClient.SaveAll(ctx, path)

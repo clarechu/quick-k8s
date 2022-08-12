@@ -58,8 +58,8 @@
     run_once: true
     shell: |
       helm upgrade --install ingress-nginx --create-namespace -n ingress-nginx /etc/quick-k8s/manifests/ingress-nginx \
-      --set controller.admissionWebhooks.patch.image.registry={{IMAGE_REGISTRY}} \
-      --set controller.image.registry={{IMAGE_REGISTRY}} \
+      --set controller.admissionWebhooks.patch.image.registry={{kube_image_repository}} \
+      --set controller.image.registry={{kube_image_repository}} \
       --set controller.service.type=NodePort
     ignore_errors: true
 
@@ -70,40 +70,6 @@
     until: '"active" in ingress_status.stdout'
     retries: 10
     delay: 3
-
-  - name: 安装 vela-core
-    run_once: true
-    shell: |
-      helm upgrade --install vela-core --create-namespace -n vela-system /etc/quick-k8s/manifests/vela-core \
-      --set hub={{IMAGE_REGISTRY}}/oamdev
-    ignore_errors: true
-
-  - name: 检查 vela-core 是否健康
-    shell: |
-      kubectl get po -n vela-system |grep -v NAME|awk '{split($2,a,"/"); if(a[1]!=a[2]){ print "UNHEALTHY"}}'
-    register: vela_status
-    until: '"UNHEALTHY" not in vela_status.stdout'
-    retries: 10
-    delay: 3
-
-  - name: 安装 fluxcd
-    shell: |
-      helm upgrade --install fluxcd --create-namespace -n flux-system /etc/quick-k8s/manifests/fluxcd \
-      --set image.helmController.repository={{IMAGE_REGISTRY}}/fluxcd \
-      --set image.imageAutomationController.repository={{IMAGE_REGISTRY}}/fluxcd \
-      --set image.imageReflectorController.repository={{IMAGE_REGISTRY}}/fluxcd \
-      --set image.kustomizeController.repository={{IMAGE_REGISTRY}}/fluxcd \
-      --set image.notificationController.repository={{IMAGE_REGISTRY}}/fluxcd \
-      --set image.sourceController.repository={{IMAGE_REGISTRY}}/fluxcd
-    register: result
-    until: result.rc == 0
-    retries: 10
-    delay: 3
-
-  - name: 安装 prometheus-operator
-    shell: |
-      kubectl get po
-    ignore_errors: true
 
   when:
     - inventory_hostname == groups['kube_master'][0]
