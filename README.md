@@ -7,6 +7,14 @@
 
 ## quick start
 
+前置安装
+```bash
+# centos
+yum install -y centos-release-ansible-29.noarch ansible git wget
+
+```
+
+
 1. 下载并安装`quickctl`
 ```bash
 bash <(curl -s -S -L https://raw.githubusercontent.com/clarechu/quick-k8s/main/quick.sh)

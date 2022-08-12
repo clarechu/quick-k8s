@@ -62,8 +62,11 @@ quickctl cluster
 			}
 			cluster.setCluster()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return cluster.Start()
+		Run: func(cmd *cobra.Command, args []string) {
+			err := cluster.Start()
+			if err != nil {
+				log.Fatalf("运行失败:%s", err.Error())
+			}
 		},
 	}
 	addClusterFlags(clusterCmd, cluster)
