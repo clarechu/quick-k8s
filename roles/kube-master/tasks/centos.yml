@@ -7,13 +7,13 @@
 
 - name: "安装 kubelet-{{ kube_version }} kubectl-{{ kube_version }}"
   shell: >
-    yum install -y kubelet-{{ kube_version }} kubectl-{{ kube_version }}
+    yum install -y kubelet-{{ kube_version }} kubectl-{{ kube_version }}  --nogpgcheck
   when:
   - 'INSTALL_SOURCE != "offline"'
 
 - name: "安装 kubeadm-{{ kube_version }}"
   shell: >
-    yum install -y kubeadm-{{ kube_version }}
+    yum install -y kubeadm-{{ kube_version }}  --nogpgcheck
   when:
   - 'INSTALL_SOURCE != "offline"'
 
