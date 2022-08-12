@@ -67,6 +67,7 @@
   until: '"active" in docker_status.stdout'
   retries: 10
   delay: 6
+
 - name: 开机启用docker 服务
   shell: systemctl enable docker
   ignore_errors: true
@@ -77,3 +78,4 @@
     name: "{{ ansible_user }}"
     groups: docker
     append: yes
+  ignore_errors: true

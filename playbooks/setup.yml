@@ -1,30 +1,26 @@
-# [optional] to synchronize system time of nodes with 'chrony' 
-- hosts:
-  - kube_master
-  - kube_node
-  - chrony
-  roles:
-  - { role: os-harden, when: "OS_HARDEN|bool" }
-  - { role: chrony, when: "groups['chrony']|length > 0" }
-
-
-# prepare tasks for all nodes
-- hosts:
-  - kube_master
-  - kube_node
-  roles:
-  - prepare
-
-# to install a container runtime
-- hosts:
-  - kube_master
-  - kube_node
-  roles:
-  - { role: runtime }
-
-
 # 初始化master节点
 - hosts:
   - kube_master
   roles:
+  - { role: os-harden, when: "OS_HARDEN|bool" }
+  - { role: chrony, when: "groups['chrony']|length > 0" }
+  - prepare
+  - { role: runtime }
   - kube-master
+
+
+- hosts:
+  - kube_node
+  - kube_master
+  roles:
+  - { role: os-harden, when: "OS_HARDEN|bool" }
+  - { role: chrony, when: "groups['chrony']|length > 0" }
+  - prepare
+  - { role: runtime }
+  - kube-node
+
+
+- hosts:
+  - kube_master
+  roles:
+  - manifests
