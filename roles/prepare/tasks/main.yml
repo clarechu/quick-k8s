@@ -48,7 +48,7 @@
     dest: /etc/hosts
     state: present
     regexp: 'registry.local'
-    line: "{{ ansible_env.SSH_CLIENT.split(' ')[0] }}    registry.local"
+    line: "{{  groups['kube_master'][0] }}    registry.local"
 
 
 - name: 添加 kubernetes hosts 解析
