@@ -93,8 +93,6 @@
 # 初始化其他 master 节点
 - include_tasks: master-join.yml
   when: 
-  - not kubelet_conf_stat.stat.exists
   - inventory_hostname != groups['kube_master'][0]
-  - inventory_hostname in (groups['kube_master'])
   - '"active" not in kubelet_already_running.stdout'
 

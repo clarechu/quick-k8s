@@ -11,10 +11,6 @@ OS_HARDEN: false
 CLUSTER_NAME: "cluster1"
 CONTEXT_NAME: "context-{{ CLUSTER_NAME }}"
 
-
-# 拉取镜像地址
-IMAGE_REGISTRY: registry.cn-shenzhen.aliyuncs.com/quick-k8s
-
 # kubernetes各组件镜像仓库前缀
 kube_image_repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s
 ############################

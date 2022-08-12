@@ -1,15 +1,5 @@
 # 初始化master节点
 - hosts:
-  - kube_master
-  roles:
-  - { role: os-harden, when: "OS_HARDEN|bool" }
-  - { role: chrony, when: "groups['chrony']|length > 0" }
-  - prepare
-  - { role: runtime }
-  - kube-master
-
-
-- hosts:
   - kube_node
   - kube_master
   roles:
@@ -17,6 +7,17 @@
   - { role: chrony, when: "groups['chrony']|length > 0" }
   - prepare
   - { role: runtime }
+
+- hosts:
+  - kube_master
+  roles:
+  - kube-master
+
+
+- hosts:
+  - kube_node
+  - kube_master
+  roles:
   - kube-node
 
 
