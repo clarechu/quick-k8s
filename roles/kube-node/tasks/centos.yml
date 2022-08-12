@@ -6,21 +6,41 @@
     enabled: no
     gpgcheck: no
     state: present
+  when:
+  - 'INSTALL_SOURCE != "offline"'
 
-- name: "安装 kubeadm-{{ kube_upgrade_version }}"
+- name: "安装 kubeadm-{{ kube_version }}"
   yum:
     name:
-    - "kubeadm-{{ kube_upgrade_version }}"
+    - "kubeadm-{{ kube_version }}"
     state: present
     enablerepo: kubernetes
+  when:
+  - 'INSTALL_SOURCE != "offline"'
 
-- include_tasks: common.yml
-  when: inventory_hostname in (groups['kube-master'] + groups['new-master'] + groups['kube_node'])
-
-- name: "安装 kubelet-{{ kube_upgrade_version }} kubectl-{{ kube_upgrade_version }}"
+- name: "安装 kubelet-{{ kube_version }} kubectl-{{ kube_version }}"
   yum:
     name:
-    - "kubectl-{{ kube_upgrade_version }}"
-    - "kubelet-{{ kube_upgrade_version }}"
+    - "kubelet-{{ kube_version }}"
+    - "kubectl-{{ kube_version }}"
     state: present
     enablerepo: kubernetes
+  when:
+  - 'INSTALL_SOURCE == "offline"'
+
+
+- block:
+  - name: 离线下载Kubernetes rpm 包
+    copy:
+      src: "{{ base_dir }}/offline/packages/rpm/kubernetes-1.20.15.tgz"
+      dest: "/tmp"
+  - name: 解压kubernetes 安装包
+    shell: >
+      tar -xvf /tmp/kubernetes-1.20.15.tgz -C /tmp
+  - name: 离线安装 kubernetes
+    shell: >
+      yum install -y /tmp/kubernetes/*.rpm
+  when:
+  - 'INSTALL_SOURCE == "offline"'
+
+

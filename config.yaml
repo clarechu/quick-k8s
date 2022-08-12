@@ -68,7 +68,7 @@ addonImages:
   host: k8s.gcr.io
   repository: k8s.gcr.io/metrics-server/metrics-server:v0.6.1
 - name: kube-webhook-certgen
-  host: docker.io
+  host: registry.k8s.io
   repository: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.1.1
 binaryUri:
 - name: helm-v3.9.2-linux-amd64.tar.gz

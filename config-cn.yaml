@@ -1,0 +1,92 @@
+cluster: cluster01
+# 这个地方暂时不支持升级 仅仅只支持v1.20.15 版本的k8s
+kubernetesVersion: v1.20.15
+controlPlaneEndpoint: kubernetes.cluster.local:6443
+kubernetesImages:
+- name: kube-apiserver
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/kube-apiserver:v1.20.15
+- name: kube-controller-manager
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/kube-controller-manager:v1.20.15
+- name: kube-scheduler
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/kube-scheduler:v1.20.15
+- name: kube-proxy
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/kube-proxy:v1.20.15
+- name: pause
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/pause:3.2
+- name: etcd
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/etcd:3.4.13-0
+- name: coredns
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/coredns:1.7.0
+addonImages:
+- name: mirrored-flannelcni-flannel
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/mirrored-flannelcni-flannel:v0.19.0
+- name: controller
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/controller:v1.3.0
+- name: kube-webhook-certgen
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/kube-webhook-certgen:v2.4.1
+- name: vela-core
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/vela-core:v1.4.0
+- name: cluster-gateway
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/cluster-gateway:v1.4.0
+- name: mirrored-flannelcni-flannel-cni-plugin
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/mirrored-flannelcni-flannel-cni-plugin:v1.1.0
+- name: image-automation-controller
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/image-automation-controller:v0.22.1
+- name: kustomize-controller
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/kustomize-controller:v0.25.0
+- name: image-reflector-controller
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/image-reflector-controller:v0.18.0
+- name: notification-controller
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/notification-controller:v0.23.5
+- name: helm-controller
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/helm-controller:v0.21.0
+- name: source-controller
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/source-controller:v0.24.4
+- name: traefik
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/traefik:2.6.3
+- name: metrics-server
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/metrics-server:v0.6.1
+- name: kube-webhook-certgen
+  host: registry.cn-shenzhen.aliyuncs.com
+  repository: registry.cn-shenzhen.aliyuncs.com/quick-k8s/kube-webhook-certgen:v1.1.1
+binaryUri:
+- name: helm-v3.9.2-linux-amd64.tar.gz
+  uri: https://get.helm.sh/helm-v3.9.2-linux-amd64.tar.gz
+- name: docker-20.10.12.tgz
+  uri: https://download.docker.com/linux/static/stable/x86_64/docker-20.10.12.tgz
+redHatPackageManagerUri:
+# 安装docker 所需的安装包
+- name: kubeadm-1.20.15-0.x86_64.rpm
+  uri: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/Packages/ee0ab01c427e97e7d555323713644df281e3f7ed667efb654c01be332e243c1f-kubeadm-1.20.15-0.x86_64.rpm
+- name: kubelet-1.20.15-0.x86_64.rpm
+  uri: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/Packages/22bae2c4b5447d15b445c9df52f16eb4af531bf3834be41fe473b6c1fdf321e9-kubelet-1.20.15-0.x86_64.rpm
+- name: kubectl-1.20.15-0.x86_64.rpm
+  uri: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/Packages/bf71d3facfceb5067ac18018ffeb6c77566dad40cf463e2ebecd6ac52bbf0b94-kubectl-1.20.15-0.x86_64.rpm
+debianPackageManagerUri:
+- name: kubeadm_1.20.15-00_amd64.deb
+  uri: https://mirrors.aliyun.com/kubernetes/apt/pool/kubeadm_1.20.15-00_amd64_d2df821caf28316ac7288f5a75b29cd28c359696ef1fc88dc8dd688e324622b6.deb
+- name: kubectl_1.20.15-00_amd64.deb
+  uri: https://mirrors.aliyun.com/kubernetes/apt/pool/kubectl_1.20.15-00_amd64_80a863a434987db56c30901d54627efe4f9fbe712cc6befc61c716c1ead4680d.deb
+- name: kubelet_1.20.15-00_amd64.deb
+  uri: https://mirrors.aliyun.com/kubernetes/apt/pool/kubelet_1.20.15-00_amd64_02e67343648454533e967ee2b19a2c4f2cae2b3b85d38bc9be1e589152ee082c.deb

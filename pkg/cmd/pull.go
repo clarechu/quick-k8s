@@ -46,7 +46,7 @@ quickctl save
 			}
 		},
 	}
-	pullCmd.Flags().StringVar(&filePath, "config", "/etc/quick-k8s/config.yaml", "配置文件的默认路径")
+	pullCmd.Flags().StringVar(&filePath, "config", "/etc/quick-k8s/config-cn.yaml", "配置文件的默认路径")
 	pullCmd.Flags().StringVar(&path, "path", "/etc/quick-k8s", "镜像存储根路径")
 
 	return pullCmd
