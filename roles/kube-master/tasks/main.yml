@@ -75,21 +75,26 @@
     - inventory_hostname == groups['kube_master'][0]
 
 - block:
-  # 获取 当前的token值
-  - name: 获取token 参数
-    shell: |
-      echo "{{hostvars[(groups['kube_master'][0])]['kubeadm_token'].stdout}}"
-    register: kubeadm_token
-  - name: 获取 certificate-key 参数
-    shell: |
-      echo "{{hostvars[(groups['kube_master'][0])]['certificate_key'].stdout}}"
-    register: certificate_key
+    # 获取 当前的token值
+    - name: 获取token 参数
+      shell: |
+        echo "{{hostvars[(groups['kube_master'][0])]['kubeadm_token'].stdout}}"
+      register: kubeadm_token
+    - name: 获取 certificate-key 参数
+      shell: |
+        echo "{{hostvars[(groups['kube_master'][0])]['certificate_key'].stdout}}"
+      register: certificate_key
   when:
-    - 'inventory_hostname != groups.kube_master[0]'
+    - inventory_hostname != groups['kube_master'][0]
+    - inventory_hostname in (groups['kube_master'])
+    - '"active" not in kubelet_already_running.stdout'
 
 
 # 初始化其他 master 节点
 - include_tasks: master-join.yml
   when: 
-  - 'inventory_hostname != groups.kube_master[0]'
+  - not kubelet_conf_stat.stat.exists
+  - inventory_hostname != groups['kube_master'][0]
+  - inventory_hostname in (groups['kube_master'])
+  - '"active" not in kubelet_already_running.stdout'
 
