@@ -30,13 +30,24 @@
     template: src=kube-flannel.yaml.j2 dest=/etc/quick-k8s/yml/flannel.yaml
     run_once: true
 
+  - name: 配置 kubernetes-dashboard yaml文件
+    template: src=kubernetes-dashboard.yaml.j2 dest=/etc/quick-k8s/yml/kubernetes-dashboard.yaml
+    run_once: true
+
+  - name: 配置 node-local-dns yaml文件
+    template: src=node-local-dns.yaml.j2 dest=/etc/quick-k8s/yml/node-local-dns.yaml
+    run_once: true
+
   - name: 配置 metrics-server  yaml文件
     template: src=metrics-server.yaml.j2 dest=/etc/quick-k8s/yml/metrics-server.yaml
     run_once: true
 
   - name: 安装网络插件cni-flannel
-    shell: |
-      kubectl apply -f /etc/quick-k8s/yml/flannel.yaml
+    shell:
+      cmd: |
+        kubectl apply -f /etc/quick-k8s/yml/flannel.yaml
+        kubectl apply -f /etc/quick-k8s/yml/node-local-dns.yaml
+        kubectl apply -f /etc/quick-k8s/yml/metrics-server.yaml
     run_once: true
     ignore_errors: true
 
