@@ -16,7 +16,7 @@
     state: present
     enablerepo: kubernetes
   when:
-  - 'INSTALL_SOURCE == "offline"'
+  - 'INSTALL_SOURCE != "offline"'
 
 - name: "安装 kubeadm-{{ kube_version }}"
   yum:
