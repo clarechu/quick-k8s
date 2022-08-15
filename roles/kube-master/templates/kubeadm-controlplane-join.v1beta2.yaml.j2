@@ -45,7 +45,6 @@ imageRepository: "{{ kube_image_repository }}"
 networking:
   dnsDomain: {{ kube_dns_domain }}
   podSubnet: {{ kube_pod_subnet }}
-  serviceSubnet: {{ kube_service_subnet }}
 apiServer:
   extraArgs:
     allow-privileged: "true"
@@ -119,7 +118,6 @@ apiServer:
 {% endfor %}
   - 127.0.0.1
   - 0:0:0:0:0:0:0:1
-  - {{ kubernetes_service_ip }}
 {% if lb_kube_apiserver_ip is defined %}
   - {{ lb_kube_apiserver_ip | trim }}
 {% endif %}

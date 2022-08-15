@@ -35,13 +35,7 @@
 - name: 创建 kubeadm 的配置文件
   template:
     src: >-
-      {% if inventory_hostname == groups['kube_master'][0] -%}
       kubeadm-controlplane-init.{{ kubeadmConfig_api_version }}.yaml.j2
-      {%- elif inventory_hostname in (groups['kube_master']) -%}
-      kubeadm-controlplane-join.{{ kubeadmConfig_api_version }}.yaml.j2
-      {%- else -%}
-      kubeadm-join.{{ kubeadmConfig_api_version }}.yaml.j2
-      {%- endif %}
     dest: "/etc/kubernetes/kubeadm-config.yaml"
     owner: root
     mode: 0644

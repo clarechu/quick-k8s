@@ -66,7 +66,7 @@
 - include_tasks: master-init.yml
   when: 
   - not kubelet_conf_stat.stat.exists
-  - inventory_hostname == groups['kube_master'][0]
+  - inventory_hostname == groups['kube-master'][0]
   - '"active" not in kubelet_already_running.stdout'
 
 # 获取集群token 的值
@@ -85,13 +85,13 @@
         echo "{{hostvars[(groups['kube_master'][0])]['certificate_key'].stdout}}"
       register: certificate_key
   when:
-    - inventory_hostname not in groups.kube_master[0]
+    - inventory_hostname != groups['kube_master'][0]
     - '"active" not in kubelet_already_running.stdout'
 
 
 # 初始化其他 master 节点
 - include_tasks: master-join.yml
   when:
-  - inventory_hostname not in groups.kube_master[0]
+  - inventory_hostname != groups['kube_master'][0]
   - '"active" not in kubelet_already_running.stdout'
 
