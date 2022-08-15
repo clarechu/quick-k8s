@@ -6,14 +6,20 @@
   - 'INSTALL_SOURCE != "offline"'
 
 - name: "安装 kubelet-{{ kube_version }} kubectl-{{ kube_version }}"
-  shell: >
-    yum install -y kubelet-{{ kube_version }} kubectl-{{ kube_version }}  --nogpgcheck
+  yum:
+    name:
+    - "kubelet-{{ kube_version }}"
+    - "kubectl-{{ kube_version }}"
+    state: present
+    enablerepo: kubernetes
   when:
   - 'INSTALL_SOURCE != "offline"'
-
 - name: "安装 kubeadm-{{ kube_version }}"
-  shell: >
-    yum install -y kubeadm-{{ kube_version }}  --nogpgcheck
+  yum:
+    name:
+    - "kubeadm-{{ kube_version }}"
+    state: present
+    enablerepo: kubernetes
   when:
   - 'INSTALL_SOURCE != "offline"'
 
