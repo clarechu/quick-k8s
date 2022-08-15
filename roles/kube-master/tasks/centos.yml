@@ -1,9 +1,12 @@
 - name: 添加 Kubernetes yum 仓库
-  shell: |
-    yum-config-manager --add-repo {{kubernetes_yum_repo}}
-  ignore_errors: true
-  when:
-  - 'INSTALL_SOURCE != "offline"'
+  yum_repository:
+    name: kubernetes
+    file: kubernetes
+    description: Kubernetes
+    baseurl: "{{ kubernetes_yum_repo }}"
+    enabled: no
+    gpgcheck: no
+    state: present
 
 - name: "安装 kubelet-{{ kube_version }} kubectl-{{ kube_version }}"
   yum:
