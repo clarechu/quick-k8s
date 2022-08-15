@@ -66,7 +66,7 @@
 - include_tasks: master-init.yml
   when: 
   - not kubelet_conf_stat.stat.exists
-  - inventory_hostname == groups['kube-master'][0]
+  - inventory_hostname == groups['kube_master'][0]
   - '"active" not in kubelet_already_running.stdout'
 
 # 获取集群token 的值
