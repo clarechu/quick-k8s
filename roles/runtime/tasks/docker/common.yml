@@ -71,11 +71,3 @@
 - name: 开机启用docker 服务
   shell: systemctl enable docker
   ignore_errors: true
-
-
-- name: 添加当前用户到 Docker 用户组
-  user:
-    name: "{{ ansible_user }}"
-    groups: docker
-    append: yes
-  ignore_errors: true
