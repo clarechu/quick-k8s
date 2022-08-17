@@ -3,6 +3,7 @@
     shell: |
       helm version
     register: helm_cli_status
+    changed_when: "not found"
     ignore_errors: true
 
   - name: install helm cli 命令行工具
@@ -34,6 +35,10 @@
     template: src=kubernetes-dashboard.yaml.j2 dest=/etc/quick-k8s/yml/kubernetes-dashboard.yaml
     run_once: true
 
+  - name: 注册变量 CLUSTER_DNS_SVC_IP
+    shell: kubectl get svc -n kube-system kube-dns |grep -v CLUSTER-IP |awk '{print $3}'
+    register: CLUSTER_DNS_SVC_IP
+
   - name: 配置 node-local-dns yaml文件
     template: src=node-local-dns.yaml.j2 dest=/etc/quick-k8s/yml/node-local-dns.yaml
     run_once: true
@@ -57,7 +62,7 @@
     register: flannel_status
     until: '"active" in flannel_status.stdout'
     retries: 10
-    delay: 3
+    delay: 10
 
   - name: 安装监控插件
     shell: |
@@ -80,7 +85,7 @@
     register: ingress_status
     until: '"active" in ingress_status.stdout'
     retries: 10
-    delay: 3
+    delay: 10
 
   when:
     - inventory_hostname == groups['kube_master'][0]
